@@ -1,0 +1,52 @@
+{% extends 'admin/admin_dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4 text-center">Post Management</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover" id="postTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                    <tr id="postRow{{ post.id }}">
+                        <td>{{ post.title }}</td>
+                        <td>{{ post.author.username }}</td>
+                        <td>
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-thumbnail" style="max-width: 150px;">
+                            {% else %}
+                                <span>No image</span>
+                            {% endif %}
+                        </td>
+                        <td>{% if post.is_published %}Published{% else %}Draft{% endif %}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <!-- Delete Button -->
+                                <form action="{% url 'delete_post' post.id %}" method="post" class="mb-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this post?');">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </form>
+                                <!-- Publish/Unpublish Button with left margin -->
+                                <a href="{% url 'toggle_publish_post' post.id %}" class="btn btn-warning btn-sm ms-2">
+                                    {% if post.is_published %} Unpublish {% else %} Publish {% endif %}
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

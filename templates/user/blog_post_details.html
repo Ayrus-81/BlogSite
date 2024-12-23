@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+    <h1>{{ blog_post.title }}</h1>
+
+    <!-- Blog Post Image -->
+    {% if blog_post.image %}
+        <img src="{{ blog_post.image.url }}" alt="{{ blog_post.title }}" style="max-width: 300px; max-height: 200px; display: block; margin-bottom: 10px;">
+    {% endif %}
+
+    <p>{{ blog_post.content }}</p>
+    <small>Author: {{ blog_post.author.username }}</small>
+    <small>Created on: {{ blog_post.created_at|date:"F d, Y H:i" }}</small>
+
+    <h2>Comments:</h2>
+    {% for comment in comments %}
+        <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+            <div style="display: flex; align-items: center;">
+                <!-- Display User Profile Picture -->
+                {% if comment.user.profile.profile_pic %}
+                    <img src="{{ comment.user.profile.profile_pic.url }}" alt="{{ comment.user.username }}" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                {% else %}
+                    <img src="{% static 'default_profile_pic.jpg' %}" alt="{{ comment.user.username }}" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                {% endif %}
+                <strong>{{ comment.user.username }}</strong>
+            </div>
+            <p>{{ comment.content }}</p>
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+{% endblock %}

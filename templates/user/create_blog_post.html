@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1>Create Blog Post</h1>
+<form method="post" enctype="multipart/form-data">  <!-- Add enctype for file upload -->
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
+
+{% endblock %}

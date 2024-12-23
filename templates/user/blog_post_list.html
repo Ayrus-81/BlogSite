@@ -1,0 +1,77 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1>Blog Posts</h1>
+
+<div class="blog-posts">
+    {% for post in page_obj %}
+        <div class="blog-post" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+            <h2>{{ post.title }}</h2>
+
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 300px; height: auto; margin-bottom: 10px; border-radius: 5px;">
+            {% endif %}
+
+            <p>{{ post.content|truncatewords:20 }}</p>
+            <small>Created on: {{ post.created_at|date:"F d, Y H:i" }}</small>
+
+            <!-- Display Username and Profile Picture -->
+            <div class="author-info" style="margin-top: 15px; display: flex; align-items: center;">
+                {% if post.author.profile.profile_pic %}
+                    <img src="{{ post.author.profile.profile_pic.url }}" alt="{{ post.author.username }}" style="width: 80px; height: 80px; border-radius: 50%; margin-right: 10px;">
+                {% else %}
+                    <img src="{% static 'default_profile_pic.jpg' %}" alt="{{ post.author.username }}" style="width: 80px; height: 80px; border-radius: 50%; margin-right: 10px;">
+                {% endif %}
+                <span>{{ post.author.username }}</span>
+            </div>
+
+            <!-- Display comments -->
+            <div class="comments" style="margin-top: 20px;">
+                <h3>Comments</h3>
+                <ul>
+                    {% for comment in post.comments.all %}
+                        <li>
+                            <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
+                            <small style="display: block; margin-top: 5px;">{{ comment.created_at|date:"F d, Y H:i" }}</small>
+                        </li>
+                    {% empty %}
+                        <p>No comments yet. Be the first to comment!</p>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Add a comment -->
+            {% if user.is_authenticated %}
+                <form action="{% url 'add_comment' post.id %}" method="post" style="margin-top: 20px;">
+                    {% csrf_token %}
+                    <textarea name="content" rows="3" placeholder="Write a comment..." style="width: 100%;"></textarea>
+                    <button type="submit" style="margin-top: 10px;" class="btn btn-light">Post Comment</button>
+                </form>
+            {% else %}
+                <p><a href="{% url 'login' %}">Log in</a> to post a comment.</p>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No blog posts available.</p>
+    {% endfor %}
+</div>
+
+<div class="pagination" style="margin-top: 20px;">
+    {% if page_obj.has_previous %}
+        <a href="?page=1" class="btn btn-secondary">&laquo; First</a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Previous</a>
+    {% endif %}
+
+    <span class="current" style="padding: 5px;">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Last &raquo;</a>
+    {% endif %}
+</div>
+
+{% endblock %}

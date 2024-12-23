@@ -1,0 +1,14 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+<p>Post: {{ blog_post.title }}</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-dark">Add Comment</button>
+</form>
+<a href="{% url 'blog_post_list' %}">Back to Blog List</a>
+
+{% endblock %}

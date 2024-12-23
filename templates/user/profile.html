@@ -1,0 +1,39 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="">
+        <h1>User Profile</h1>
+
+        {% if profile.profile_pic %}
+            <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;">
+        {% else %}
+            <p>No profile picture available.</p>
+        {% endif %}
+
+        <!-- Username -->
+        <p><strong>Username:</strong> {{ user.username }}</p>
+
+        <!-- Email -->
+        <p><strong>Email:</strong> {{ user.email }}</p>
+
+        <!-- Contact Number -->
+        {% if profile.contact_number %}
+            <p><strong>Contact Number:</strong> {{ profile.contact_number }}</p>
+        {% else %}
+            <p><strong>Contact Number:</strong> Not provided</p>
+        {% endif %}
+
+        <div class="d-grid">
+            <a href="{% url 'update_profile' %}" class="btn btn-success">Update Profile</a><span></span>
+            <a href="{% url 'my_blog_post_list' %}" class="btn btn-success">My Blog</a>
+            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

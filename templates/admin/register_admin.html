@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+<body>
+    <h2>Create an Admin User</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register Admin</button>
+    </form>
+    <div style="margin-top: 20px;">
+    <a href="{% url 'admin_login' %}" class="btn btn-primary">Login</a>
+</div>
+
+{% endblock %}

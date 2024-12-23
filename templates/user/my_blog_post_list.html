@@ -1,0 +1,50 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+<div class="blog-posts">
+    {% for post in page_obj %}
+        <div class="blog-post" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+            <h2>{{ post.title }}</h2>
+
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 300px; max-height: 200px; display: block; margin-bottom: 10px;">
+            {% endif %}
+
+            <p>{{ post.content|truncatewords:20 }}</p>
+            <small>Created on: {{ post.created_at }}</small>
+
+            {% if post.author == request.user %}
+                <div class="post-actions">
+                    <a href="{% url 'edit_blog_post' post.id %}" class="btn btn-primary">Edit</a>
+
+                    <!-- Delete form for blog post -->
+                    <form action="{% url 'delete_blog_post' post.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+        <hr>
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+    {% endif %}
+</div>
+
+<div class="new-post-link" style="margin-top: 20px;">
+    <a href="{% url 'create_blog_post' %}" class="btn btn-primary">Create New Blog Post</a>
+</div>
+{% endblock %}

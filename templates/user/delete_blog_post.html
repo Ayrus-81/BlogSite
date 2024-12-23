@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+<p>Are you sure you want to delete the blog post "{{ blog_post.title }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+</form>
+<a href="{% url 'blog_post_list' %}">Cancel</a>
+
+{% endblock %}

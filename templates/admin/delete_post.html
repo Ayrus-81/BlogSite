@@ -1,0 +1,12 @@
+{% extends 'admin/admin_dashboard.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2>Confirm Deletion</h2>
+    <p>Are you sure you want to delete the post <strong>{{ post.title }}</strong> by {{ post.author.username }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'post_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
